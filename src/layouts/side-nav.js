@@ -61,6 +61,7 @@ const reduceChildRoutes = ({ acc, collapse, depth, item, pathname }) => {
         key={item.title}
         openImmediately={item.openImmediately}
         path={item.path}
+        scope={item.scope}
         title={item.title}
         type={item.type}
       >
@@ -80,7 +81,7 @@ const reduceChildRoutes = ({ acc, collapse, depth, item, pathname }) => {
             pathname,
           })}
         </Stack>
-      </SideNavItem>
+      </SideNavItem>,
     );
   } else {
     acc.push(
@@ -92,8 +93,9 @@ const reduceChildRoutes = ({ acc, collapse, depth, item, pathname }) => {
         icon={item.icon}
         key={item.title}
         path={item.path}
+        scope={item.scope}
         title={item.title}
-      />
+      />,
     );
   }
 
@@ -171,43 +173,49 @@ export const SideNav = (props) => {
             },
           }}
         >
+          <Box
+            component="nav"
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+              p: 2,
+            }}
+          >
             <Box
-              component="nav"
+              component="ul"
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                height: "100%",
-                p: 2,
+                flexGrow: 1,
+                listStyle: "none",
+                m: 0,
+                p: 0,
               }}
             >
-              <Box
-                component="ul"
-                sx={{
-                  flexGrow: 1,
-                  listStyle: "none",
-                  m: 0,
-                  p: 0,
-                }}
-              >
-                {/* Bookmarks section above Dashboard */}
-                {showSidebarBookmarks && (
-                  <>
-                    <SideNavBookmarks collapse={collapse} />
-                    <Divider sx={{ my: 1 }} />
-                  </>
-                )}
-                {/* Render all menu items */}
-                {renderItems({
-                  collapse,
-                  depth: 0,
-                  items: processedItems,
-                  pathname,
-                })}
-              </Box>{" "}
-              {/* Add this closing tag */}
-              {profile?.clientPrincipal && <CippSponsor />}
+              {/* Bookmarks section above Dashboard */}
+              {showSidebarBookmarks && (
+                <>
+                  <SideNavBookmarks collapse={collapse} />
+                  <Divider sx={{ my: 1 }} />
+                </>
+              )}
+              {/* Render all menu items */}
+              {renderItems({
+                collapse,
+                depth: 0,
+                items: processedItems,
+                pathname,
+              })}
             </Box>{" "}
-            {/* Closing tag for the parent Box */}
+            {/* Add this closing tag */}
+            {profile?.clientPrincipal && (
+              <Box
+                sx={{ position: "sticky", bottom: 0, backgroundColor: "background.default", pt: 1 }}
+              >
+                <CippSponsor />
+              </Box>
+            )}
+          </Box>{" "}
+          {/* Closing tag for the parent Box */}
         </Drawer>
       )}
     </>
